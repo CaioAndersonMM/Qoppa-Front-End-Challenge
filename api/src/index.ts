@@ -3,6 +3,13 @@ import chalk from 'chalk';
 import { Request, Response } from 'express';
 import figlet from 'figlet';
 
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 await figlet('QoppaTech', (err, data) => {
     if(err) {
         console.log(chalk.yellow("CANNOT LOAD FIGLET ART"));
@@ -18,9 +25,17 @@ console.log("----------------------------------------------------------------")
 const app = express();
 
 app.use( express.json() );
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app
-.get("/", (req: Request, res: Response) => res.status(200).send("<h1>API DESAFIO: QoppaTech </h1>"))
+.get("/", (req: Request, res: Response) =>  {
+    // Use res.sendFile() para enviar o arquivo HTML
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+})
+
+
+
 .post("/singUp", (req: Request, res: Response) => {
     console.log(chalk.yellow("⏺ Requisição do tipo POST recebida na rota correta!"));
 
